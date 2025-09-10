@@ -24,9 +24,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++17
 
-INCLUDEPATH += $$PWD/../myplugin/ \
-
-
 SOURCES += \
         main.cpp \
         mainwindow.cpp

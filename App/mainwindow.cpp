@@ -4,24 +4,15 @@
 #include <QDir>
 #include <QDebug>
 #include "iplugin.h"
-#include "appcontext.h"
+// #include "appcontext.h"
+#include "QMessageBox"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    // 设置初始 xyz 值
-    AppContext::instance().setValue("x", 1.23);
-    AppContext::instance().setValue("y", 4.56);
-    AppContext::instance().setValue("z", 7.89);
-
-    // 监听变化（比如插件修改了数据，主程序就能更新 UI）
-    connect(&AppContext::instance(), &AppContext::dataChanged,
-            this, [this](const QString& key, const QVariant& value) {
-        qDebug() << "主程序收到数据变化:" << key << "=" << value;
-    });
-
 
 }
 
@@ -30,11 +21,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked(){
-    // 假设插件放在可执行文件同目录的 "plugins" 子目录
+void MainWindow::on_pushButton_clicked() {
     QDir pluginsDir(qApp->applicationDirPath());
     pluginsDir.cd("plugins");
-    QString pluginPath = pluginsDir.absoluteFilePath("myplugin.dll"); // Windows
+    QString pluginPath = pluginsDir.absoluteFilePath("myplugin.dll");
+    qDebug() << "插件路径:" << pluginPath;
     QPluginLoader loader(pluginPath);
     QObject* plugin = loader.instance();
     if (!plugin) {
@@ -44,8 +35,11 @@ void MainWindow::on_pushButton_clicked(){
 
     IPlugin* iPlugin = qobject_cast<IPlugin*>(plugin);
     if (iPlugin) {
-        QWidget* w = iPlugin->createWidget(this);
+
+        QWidget* w = iPlugin->createWidget(this); // 不要指定 parent
         w->setAttribute(Qt::WA_DeleteOnClose);
+        w->setWindowFlag(Qt::Dialog); // 让它是一个独立弹窗
+        w->resize(300, 200);
         w->show();
     } else {
         qDebug() << "插件不是 IPlugin 类型";

@@ -8,80 +8,63 @@
 #include <QVBoxLayout>
 #include "appcontext.h"
 #include "QDoubleSpinBox"
+#include "QPushButton"
+#include "qDebug"
 
 
-namespace Ui {
-class myplugin;
-}
-
-class myplugin :  public QObject, public IPlugin
+class myplugin : public QObject, public IPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID IPlugin_iid)
+    Q_PLUGIN_METADATA(IID IPlugin_iid) // 使用定义的IID
     Q_INTERFACES(IPlugin)
-
 
 public:
     QString name() const override { return "MyPlugin"; }
 
     QWidget* createWidget(QWidget* parent = nullptr) override {
-        // 弹窗
-        QWidget* dialog = new QWidget(parent);
-        dialog->setWindowTitle("XYZ 参数");
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        QWidget* widget = new QWidget(parent);
 
         // 布局
-        QVBoxLayout* layout = new QVBoxLayout(dialog);
+        QVBoxLayout* layout = new QVBoxLayout(widget);
 
-        // SpinBox 控件
-        QDoubleSpinBox* spinX = new QDoubleSpinBox(dialog);
-        QDoubleSpinBox* spinY = new QDoubleSpinBox(dialog);
-        QDoubleSpinBox* spinZ = new QDoubleSpinBox(dialog);
-
-        spinX->setRange(-10000, 10000);
-        spinY->setRange(-10000, 10000);
-        spinZ->setRange(-10000, 10000);
-
+        // 三个 spinbox
+        QDoubleSpinBox* spinX = new QDoubleSpinBox(widget);
+        spinX->setRange(-1000, 1000);
         spinX->setDecimals(3);
+        spinX->setValue(0.0);
+
+        QDoubleSpinBox* spinY = new QDoubleSpinBox(widget);
+        spinY->setRange(-1000, 1000);
         spinY->setDecimals(3);
+        spinY->setValue(0.0);
+
+        QDoubleSpinBox* spinZ = new QDoubleSpinBox(widget);
+        spinZ->setRange(-1000, 1000);
         spinZ->setDecimals(3);
+        spinZ->setValue(0.0);
 
-        // 初始值从 AppContext 读取
-        spinX->setValue(AppContext::instance().getValue("x").toDouble());
-        spinY->setValue(AppContext::instance().getValue("y").toDouble());
-        spinZ->setValue(AppContext::instance().getValue("z").toDouble());
-
-        layout->addWidget(new QLabel("X 值:", dialog));
+        layout->addWidget(new QLabel("X:", widget));
         layout->addWidget(spinX);
-        layout->addWidget(new QLabel("Y 值:", dialog));
+        layout->addWidget(new QLabel("Y:", widget));
         layout->addWidget(spinY);
-        layout->addWidget(new QLabel("Z 值:", dialog));
+        layout->addWidget(new QLabel("Z:", widget));
         layout->addWidget(spinZ);
 
-        // 绑定 spinBox -> AppContext
-        QObject::connect(spinX, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-                         [](double v){ AppContext::instance().setValue("x", v); });
-        QObject::connect(spinY, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-                         [](double v){ AppContext::instance().setValue("y", v); });
-        QObject::connect(spinZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-                         [](double v){ AppContext::instance().setValue("z", v); });
+        QPushButton* okBtn = new QPushButton("确定", widget);
+        layout->addWidget(okBtn);
 
-        // 绑定 AppContext -> spinBox
-        QObject::connect(&AppContext::instance(), &AppContext::dataChanged,
-                         dialog, [=](const QString& key, const QVariant& value){
-            if (key == "x") spinX->setValue(value.toDouble());
-            if (key == "y") spinY->setValue(value.toDouble());
-            if (key == "z") spinZ->setValue(value.toDouble());
+        widget->setLayout(layout);
+
+        // 点击确定时打印当前值
+        QObject::connect(okBtn, &QPushButton::clicked, widget, [=]() {
+            qDebug() << "X=" << spinX->value()
+                     << "Y=" << spinY->value()
+                     << "Z=" << spinZ->value();
+            widget->close(); // 关闭窗口
         });
 
-        dialog->setLayout(layout);
-        dialog->resize(200, 200);
-
-        return dialog;
+        return widget;
     }
-
 };
-
-
 
 #endif // MYPLUGIN_H
