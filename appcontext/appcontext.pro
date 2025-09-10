@@ -8,39 +8,39 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = myplugin
+
 #TEMPLATE = app
 TEMPLATE = lib
 
-DEFINES += QT_DEPRECATED_WARNINGS
-CONFIG += c++17
+DEFINES += QT_DEPRECATED_WARNINGS \
+    SHAREDCONTEXT_LIBRARY
 
-INCLUDEPATH += ../appcontext
+# 动态库编译
+BASE_TARGET = appContext
 CONFIG(debug, debug|release) {
-    debug:   LIBS += "$$PWD/../bin/debug/appContextd.lib" \
-
-
-}else{
-    release: LIBS += "$$PWD/../bin/release/appContext.lib" \
-
+    TARGET = $${BASE_TARGET}d  # 用 {} 明确 BASE_TARGET 是变量，后跟 "d"
+} else {
+    TARGET = $$BASE_TARGET
 }
 
+CONFIG += c++17
 
 SOURCES += \
-        myplugin.cpp
+    appcontext.cpp
+
 
 HEADERS += \
-        iplugin.h \
-        myplugin.h
+        appcontext.h \
+
 
 
 # 根据构建模式自动切换输出路径
 CONFIG(debug, debug|release) {
     # Debug 模式：动态库输出到主项目的 libs/debug 目录
-    DESTDIR = $$PWD/../bin/debug/plugins
+    DESTDIR = $$PWD/../bin/debug
 } else {
     # Release 模式：动态库输出到主项目的 libs/release 目录
-    DESTDIR = $$PWD/../bin/release/plugins
+    DESTDIR = $$PWD/../bin/release
 }
 
 message("动态库输出目录: $$DESTDIR")  # 编译时显示当前输出目录，方便验证

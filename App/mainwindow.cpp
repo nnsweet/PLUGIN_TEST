@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QDebug>
 #include "iplugin.h"
-// #include "appcontext.h"
+#include "appcontext.h"
 #include "QMessageBox"
 
 
@@ -14,6 +14,25 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // 连接AppContext的数据变化信号到槽函数
+    connect(&AppContext::instance(), &AppContext::dataChanged,this, &MainWindow::onDataChanged);
+
+
+
+}
+
+// 实现数据同步的槽函数
+void MainWindow::onDataChanged(const QString& key, const QVariant& value) {
+    if (key == "X") {
+        m_value_x = value.toDouble();
+        ui->spinBox->setValue(m_value_x);
+    } else if (key == "Y") {
+        m_value_y = value.toDouble();
+        ui->spinBox_2->setValue(m_value_y);
+    } else if (key == "Z") {
+        m_value_z = value.toDouble();
+        ui->spinBox_3->setValue(m_value_z);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -32,10 +51,8 @@ void MainWindow::on_pushButton_clicked() {
         qDebug() << "加载插件失败:" << loader.errorString();
         return;
     }
-
     IPlugin* iPlugin = qobject_cast<IPlugin*>(plugin);
     if (iPlugin) {
-
         QWidget* w = iPlugin->createWidget(this); // 不要指定 parent
         w->setAttribute(Qt::WA_DeleteOnClose);
         w->setWindowFlag(Qt::Dialog); // 让它是一个独立弹窗

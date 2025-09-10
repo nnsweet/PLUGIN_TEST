@@ -10,6 +10,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Plugin_test
 TEMPLATE = app
+INCLUDEPATH += ../appcontext
+
+
+CONFIG(debug, debug|release) {
+    debug:   LIBS += "$$PWD/../bin/debug/appContextd.lib" \
+
+
+}else{
+    release: LIBS += "$$PWD/../bin/release/appContext.lib" \
+
+}
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -29,7 +41,6 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
-        appcontext.h \
         iplugin.h \
         mainwindow.h
 

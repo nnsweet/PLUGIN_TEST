@@ -18,7 +18,11 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    // 新增：处理数据变化的槽函数
+    void onDataChanged(const QString& key, const QVariant& value);
 
+
+    
 private:
     Ui::MainWindow *ui;
     double m_value_x = 0;

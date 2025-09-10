@@ -32,7 +32,7 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>77</width>
+      <width>168</width>
       <height>35</height>
      </rect>
     </property>
@@ -56,6 +56,9 @@
          <pointsize>19</pointsize>
         </font>
        </property>
+       <property name="maximum">
+        <number>999999999</number>
+       </property>
       </widget>
      </item>
     </layout>
@@ -65,7 +68,7 @@
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>77</width>
+      <width>168</width>
       <height>35</height>
      </rect>
     </property>
@@ -89,16 +92,19 @@
          <pointsize>19</pointsize>
         </font>
        </property>
+       <property name="maximum">
+        <number>999999999</number>
+       </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>77</width>
+      <width>168</width>
       <height>35</height>
      </rect>
     </property>
@@ -121,6 +127,9 @@
         <font>
          <pointsize>19</pointsize>
         </font>
+       </property>
+       <property name="maximum">
+        <number>999999999</number>
        </property>
       </widget>
      </item>
