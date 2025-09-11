@@ -27,7 +27,23 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->doubleSpinBox_3->setValue(m_value_z);
         }
     });
+    // 主程序spinbox修改同步到AppContext（修复后）
+    connect(ui->doubleSpinBox, &QAbstractSpinBox::editingFinished,
+            [=]() {
+        // 通过控件自身获取当前值
+        AppContext::instance().setValue("X", ui->doubleSpinBox->value());
+    });
+    connect(ui->doubleSpinBox_2, &QAbstractSpinBox::editingFinished,
+            [=]() {
+        AppContext::instance().setValue("Y", ui->doubleSpinBox_2->value());
+    });
+    connect(ui->doubleSpinBox_3, &QAbstractSpinBox::editingFinished,
+            [=]() {
+        AppContext::instance().setValue("Z", ui->doubleSpinBox_3->value());
+    });
 
+    // 主程序MainWindow构造函数中
+    qDebug() << "主程序AppContext地址:" << &AppContext::instance();
 
 }
 
@@ -60,15 +76,3 @@ void MainWindow::on_pushButton_clicked() {
     }
 }
 
-
-void MainWindow::on_doubleSpinBox_valueChanged(double arg1){
-    AppContext::instance().setValue("X", arg1);
-}
-
-void MainWindow::on_doubleSpinBox_2_valueChanged(double arg1){
-    AppContext::instance().setValue("Y", arg1);
-}
-
-void MainWindow::on_doubleSpinBox_3_valueChanged(double arg1){
-    AppContext::instance().setValue("Z", arg1);
-}
