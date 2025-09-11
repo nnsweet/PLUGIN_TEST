@@ -6,7 +6,7 @@
 #include "iplugin.h"
 #include "appcontext.h"
 #include "QMessageBox"
-
+#include "QTimer"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,24 +15,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // 连接AppContext的数据变化信号到槽函数
-    connect(&AppContext::instance(), &AppContext::dataChanged,this, &MainWindow::onDataChanged);
+    connect(&AppContext::instance(), &AppContext::dataChanged,this, [this](const QString& key, const QVariant& value){
+        if (key == "X") {
+            m_value_x = value.toDouble();
+            ui->doubleSpinBox->setValue(m_value_x);
+        } else if (key == "Y") {
+            m_value_y = value.toDouble();
+            ui->doubleSpinBox_2->setValue(m_value_y);
+        } else if (key == "Z") {
+            m_value_z = value.toDouble();
+            ui->doubleSpinBox_3->setValue(m_value_z);
+        }
+    });
 
 
-
-}
-
-// 实现数据同步的槽函数
-void MainWindow::onDataChanged(const QString& key, const QVariant& value) {
-    if (key == "X") {
-        m_value_x = value.toDouble();
-        ui->spinBox->setValue(m_value_x);
-    } else if (key == "Y") {
-        m_value_y = value.toDouble();
-        ui->spinBox_2->setValue(m_value_y);
-    } else if (key == "Z") {
-        m_value_z = value.toDouble();
-        ui->spinBox_3->setValue(m_value_z);
-    }
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +54,21 @@ void MainWindow::on_pushButton_clicked() {
         w->setWindowFlag(Qt::Dialog); // 让它是一个独立弹窗
         w->resize(300, 200);
         w->show();
+
     } else {
         qDebug() << "插件不是 IPlugin 类型";
     }
+}
+
+
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1){
+    AppContext::instance().setValue("X", arg1);
+}
+
+void MainWindow::on_doubleSpinBox_2_valueChanged(double arg1){
+    AppContext::instance().setValue("Y", arg1);
+}
+
+void MainWindow::on_doubleSpinBox_3_valueChanged(double arg1){
+    AppContext::instance().setValue("Z", arg1);
 }

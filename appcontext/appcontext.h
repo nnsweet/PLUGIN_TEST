@@ -29,7 +29,7 @@ private:
     Q_DISABLE_COPY(AppContext)
 
     mutable QMutex m_mutex;
-    QMap<QString, QVariant> m_data; // 声明为类成员，定义移至cpp
+    QMap<QString, QVariant> m_data;
 };
 
 #endif // APPCONTEXT_H

@@ -4,6 +4,7 @@
 
 myplugin::myplugin(){
 
+
 }
 
 QString myplugin::name() const { return "MyPlugin"; }
@@ -54,8 +55,30 @@ QWidget* myplugin::createWidget(QWidget* parent) {
         AppContext::instance().setValue("Z", value);
     });
 
+    //     // 关键2：优化主程序→插件的信号连接（上下文改为widget，避免控件销毁风险）
+    // connect(&AppContext::instance(), &AppContext::dataChanged, widget, [spinX, spinY, spinZ](const QString& key, const QVariant& value) {
+    //     if (key == "X") {
+    //         spinX->setValue(value.toDouble());
+    //         qDebug() << "插件接收X值：" << value.toDouble();
+    //     } else if (key == "Y") {
+    //         spinY->setValue(value.toDouble());
+    //         qDebug() << "插件接收Y值：" << value.toDouble();
+    //     } else if (key == "Z") {
+    //         spinZ->setValue(value.toDouble());
+    //         qDebug() << "插件接收Z值：" << value.toDouble();
+    //     }
+    // });
+
+    // 关键添加：主动获取主程序已有的值，初始化插件spinBox
+    double initX = AppContext::instance().getValue("X").toDouble();
+    double initY = AppContext::instance().getValue("Y").toDouble();
+    double initZ = AppContext::instance().getValue("Z").toDouble();
+    spinX->setValue(initX);
+    spinY->setValue(initY);
+    spinZ->setValue(initZ);
+    qDebug() << "插件初始化值：X=" << initX << ", Y=" << initY << ", Z=" << initZ;
 
 
-    
+
     return widget;
 }

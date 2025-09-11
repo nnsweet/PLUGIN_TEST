@@ -32,7 +32,7 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>168</width>
+      <width>259</width>
       <height>35</height>
      </rect>
     </property>
@@ -50,14 +50,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="spinBox_2">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
        <property name="font">
         <font>
          <pointsize>19</pointsize>
         </font>
        </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
        <property name="maximum">
-        <number>999999999</number>
+        <double>9999999999999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -68,7 +71,7 @@
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>168</width>
+      <width>220</width>
       <height>35</height>
      </rect>
     </property>
@@ -86,14 +89,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="spinBox_3">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
        <property name="font">
         <font>
          <pointsize>19</pointsize>
         </font>
        </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
        <property name="maximum">
-        <number>999999999</number>
+        <double>9999999999999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -104,7 +110,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>168</width>
+      <width>272</width>
       <height>35</height>
      </rect>
     </property>
@@ -122,14 +128,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="spinBox">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox">
        <property name="font">
         <font>
          <pointsize>19</pointsize>
         </font>
        </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
        <property name="maximum">
-        <number>999999999</number>
+        <double>10000000000000.000000000000000</double>
        </property>
       </widget>
      </item>
